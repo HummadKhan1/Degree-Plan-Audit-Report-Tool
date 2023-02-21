@@ -3,7 +3,10 @@
  */
 public class MainDriver{
     public static void main(String[] args){
-        PDFReader pdfReader = new PDFReader(); 
-        
+        do {
+            PDFReader pdfReader = new PDFReader();
+            GraduateStudent gradStudent = new GraduateStudent(pdfReader.getReadInPDF());
+        } while (true);
+   
     }
 }
