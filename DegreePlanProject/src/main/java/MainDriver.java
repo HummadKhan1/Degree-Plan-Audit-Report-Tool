@@ -3,9 +3,11 @@
  */
 public class MainDriver{
     public static void main(String[] args){
+        new FileSearchWindow();
+
         do {
-            PDFReader pdfReader = new PDFReader();
-            GraduateStudent gradStudent = new GraduateStudent(pdfReader.getReadInPDF());
+            //PDFReader pdfReader = new PDFReader();
+            //GraduateStudent gradStudent = new GraduateStudent(pdfReader.getReadInPDF());
         } while (true);
    
     }
