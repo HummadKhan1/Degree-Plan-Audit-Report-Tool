@@ -6,9 +6,9 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
  * This class is used to read-in graduate student transcripts from PDF file format. 
- * This class extends the Parent class FileDropWindow 
+ * 
  */
-public class PDFReader extends FileDropWindow{
+public class PDFReader{
     private String readInPDF; // Variable holds the entire content of the fileName specified PDF
     
     /**
@@ -26,29 +26,38 @@ public class PDFReader extends FileDropWindow{
     }
     
     /**
-     * This method is used to read-in a PDF file specified by its file path.
+     * This method is used to read-in the first PDF file in a specified
+     * directory.
      *
-     * @param filePath the file path of the PDF file to be read
+     * @param fileDirectory the directory containing the PDF file to be read
      */
-    public void readPDF(String filePath) {
-        try ( PDDocument document = PDDocument.load(new File(filePath))) {
-            // Extract the text from the PDF file
-            PDFTextStripper textStripper = new PDFTextStripper();
-            setReadInPDF(textStripper.getText(document));
+    public void readPDF(String fileDirectory) {
+        try {
+            // Create a File object for the specified directory
+            File dir = new File(fileDirectory);
 
+            // List all files in the directory that have a .pdf file extension
+            File[] files = dir.listFiles((d, name) -> name.endsWith(".pdf"));
+
+            // If there is at least one PDF file in the directory, read in the first one
+            if (files != null && files.length > 0) {
+                PDDocument document = PDDocument.load(files[0]);
+                PDFTextStripper textStripper = new PDFTextStripper();
+                setReadInPDF(textStripper.getText(document));
+                document.close();
+            } else {
+                // If there are no PDF files in the directory, inform the user
+                System.out.println("No PDF files found in the specified directory: " + fileDirectory);
+            }
         } catch (IOException e) {
-            // Handle the case where the specified file path is invalid or cannot be found
+            // Handle the case where the specified file directory is invalid or cannot be found
             System.out.println();
-            System.out.println("An error has occurred! Most likely you have entered a file path to a file that doesn't exist or cannot be found.");
-            System.out.println("File path in question is: " + filePath);
-
-            // Gives user another chance to enter a file path of a file that does exist and can be found. User is also given chance to end application.
-            // setFilePath(this.getFilePath());
-            // readPDF(this.getFilePath());   
+            System.out.println("An error has occurred! Most likely you have entered a file directory that doesn't exist or cannot be found.");
+            System.out.println("Directory in question is: " + fileDirectory);
         } catch (NullPointerException e) {
-            // Handle the case where the file path is null
+            // Handle the case where the file directory is null
             System.out.println();
-            System.out.println("An error has occurred! File path is null.");
+            System.out.println("An error has occurred! File directory is null.");
             System.out.println("Application has terminated due to error. Goodbye!");
             System.exit(0);
         }
