@@ -45,6 +45,7 @@ public class PDFReader{
                 PDFTextStripper textStripper = new PDFTextStripper();
                 setReadInPDF(textStripper.getText(document));
                 document.close();
+                System.out.println(readInPDF);
             } else {
                 // If there are no PDF files in the directory, inform the user
                 System.out.println("No PDF files found in the specified directory: " + fileDirectory);
