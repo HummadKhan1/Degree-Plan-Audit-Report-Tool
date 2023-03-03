@@ -1,5 +1,6 @@
 import java.util.*;
 
+
 public class GraduateStudent{
     HashMap<String, GraduateStudent> mapA = new HashMap<>();
     
