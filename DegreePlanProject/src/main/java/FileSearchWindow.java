@@ -3,9 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+//import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 
 /**
  * This class is used to launch the GUI that allows the user to search and select a desired file. 
@@ -13,8 +14,9 @@ import java.util.logging.Logger;
  */
 public class FileSearchWindow extends JFrame{
     JButton searchButton; 
-    private String filePath; // Variable will hold the absolute file path of the selected transcript 
-
+    private String filePath; // Variable holds the absolute file path of the selected transcript 
+    private CountDownLatch latch; // Used to make the program wait until user has selected file
+    
     /**
      * @return the filePath
      */
@@ -29,6 +31,20 @@ public class FileSearchWindow extends JFrame{
         this.filePath = file.getAbsolutePath();
     }
 
+    /**
+     * @return the latch
+     */
+    public CountDownLatch getLatch(){
+        return latch;
+    }
+
+    /**
+     * @param latch the latch to set
+     */
+    public void setLatch(CountDownLatch latch){
+        this.latch = latch;
+    }
+    
     /**
      * Constructor.
      *
@@ -45,6 +61,8 @@ public class FileSearchWindow extends JFrame{
         searchButton.setFocusable(false); // Search button cannot be selected with the keyboard
         frame.add(searchButton); // Add search button to JFrame content pane 
         
+        setLatch(new CountDownLatch(1));
+
         searchButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent evt){
@@ -58,12 +76,8 @@ public class FileSearchWindow extends JFrame{
                     if (returnVal == JFileChooser.APPROVE_OPTION) 
                     {
                         setFilePath(fileUpload.getSelectedFile());
-                        try{
-                            FileReader fileReader = new FileReader(getFilePath());
-                            frame.dispose(); // Close frame
-                        } catch (IOException ex){
-                            Logger.getLogger(FileSearchWindow.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        frame.dispose(); // Close frame
+                        latch.countDown(); // Remove latch 
                     }
                 }
             }

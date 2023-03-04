@@ -1,5 +1,5 @@
 import java.io.*;
-import java.util.*;
+//import java.util.*;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -61,7 +61,6 @@ public class FileReader{
                 setReadInPDF(textStripper.getText(document));
                 
                 document.close(); // Close the PDF document 
-                System.out.println(getReadInPDF());
             } 
             else if (file.exists() && file.isFile() && file.getName().endsWith(".txt")) // Check if the file exists, is a file (not a directory), and has a ".txt" extension
             {
