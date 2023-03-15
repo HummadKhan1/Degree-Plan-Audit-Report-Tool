@@ -14,7 +14,8 @@ public class MainDriver{
         
         ParsingAlgorithm parseTranscript = new ParsingAlgorithm();
         parseTranscript.parseTranscript(fileReader.getReadInPDF());
-        parseTranscript.removeDuplicates();
+        //parseTranscript.handleCourseRepeats();
+        //parseTranscript.handleTransferType();
         parseTranscript.printCourses();
     }
 }
