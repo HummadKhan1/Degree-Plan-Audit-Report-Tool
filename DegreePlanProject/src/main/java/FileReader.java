@@ -1,6 +1,4 @@
 import java.io.*;
-import java.util.ArrayList;
-//import java.util.*;
 
 import org.apache.pdfbox.pdmodel.PDDocument; 
 import org.apache.pdfbox.text.PDFTextStripper; 
@@ -15,7 +13,7 @@ public class FileReader{
     
     /**
      * Constructor is used to read-in the file specified by the absolute file path.
-     * If a PDF is read-in first then a TXT file named HardCodedCourses is also read-in. If a 
+     * If a PDF is read-in first then a TXT file named Default is also read-in. If a 
      * TXT file is read-in first then that is the only file that will be read-in by the program.
      * 
      * @param filePath the absolute file path of the PDF file to be read-in
@@ -26,7 +24,7 @@ public class FileReader{
             // Create a File object from the specified file path
             File file = new File(filePath);
             
-            File txtFile; // Variable will only be used to open the HardCodedCourses.txt file 
+            File txtFile; // Variable will only be used to open the Default.txt file 
 
             // Check if the file exists, is a file (not a directory), and has a ".pdf" extension
             if (file.exists() && file.isFile() && file.getName().endsWith(".pdf")) 
@@ -39,8 +37,8 @@ public class FileReader{
                 
                 document.close(); // Close the PDF document 
                 
-                // Open a TXT file named HardCodedCourses.txt
-                txtFile = new File("HardCodedCourses.txt"); // File is located amongst the program folders 
+                // Open a TXT file named Default.txt
+                txtFile = new File("Default.txt"); // File is located amongst the program folders 
                 
                 if (txtFile.exists() && txtFile.isFile() && txtFile.getName().endsWith(".txt")) // Check if the file exists, is a file (not a directory), and has a ".txt" extension 
                 {
@@ -51,6 +49,7 @@ public class FileReader{
                     while ((line = bufferedReader.readLine()) != null)
                     {
                         sringBuilder.append(line);
+                        sringBuilder.append(System.lineSeparator()); // Append newline character after each line
                     }
                     
                     bufferedReader.close(); // Close BufferedReader
@@ -58,7 +57,7 @@ public class FileReader{
                 } 
                 else
                 {
-                    System.out.println("HardCodedCourses.txt file not found.");
+                    System.out.println("Default.txt file not found.");
                     System.out.println("Application has terminated due to error. Goodbye!");
                     System.exit(0);
                 }

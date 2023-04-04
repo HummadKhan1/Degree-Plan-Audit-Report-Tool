@@ -12,7 +12,7 @@ public class MainDriver{
         
         FileReader fileReader = new FileReader(window.getFilePath());
         
-        ParsingAlgorithm parseTranscript = new ParsingAlgorithm();
+        ParsingAlgorithms parseTranscript = new ParsingAlgorithms();
         parseTranscript.parseTranscript(fileReader.getReadInPDF());
         //parseTranscript.handleCourseRepeats();
         //parseTranscript.handleTransferType();

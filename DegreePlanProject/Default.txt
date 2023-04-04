@@ -1,0 +1,204 @@
+Computer Science Tracks: 
+Cyber Security
+Data Science
+Intelligent Systems
+Interactive Computing
+Networks and Telecommunications
+Systems
+Traditional Computer Science
+
+Software Engineering Tracks:
+Software Engineering
+
+*********************DO NOT REMOVE THIS LINE 1*********************
+
+Leveling Courses/Pre-requisites Assigned at Admission: 
+CS 3341 Probability & Statistics in CS and SE
+CS 5303 Computer Science I
+CS 5330 Computer Science II
+CS 5333 Discrete Structures
+CS 5343 Algorithm Analysis & Data Structures
+CS 5348 Operating System Concepts
+CS 5349 Automata Theory
+CS 5354 Software Engineering
+CS 5390 Computer Networks
+
+*********************DO NOT REMOVE THIS LINE 2*********************
+
+			***************************
+			* Computer Science Tracks *
+			***************************
+
+Track: Cyber Security
+
+Core Courses 
+Information Security ------------------------------------- CS 6324
+Design and Analysis of Computer Algorithms --------------- CS 6363
+Advanced Operating Systems ------------------------------- CS 6378
+
+X of the Following Courses 
+System Security & Malicious Code Analysis ---------------- CS 6332
+Data and Applications Security --------------------------- CS 6348
+Network Security ----------------------------------------- CS 6349
+Introduction To Cryptography ----------------------------- CS 6377
+
+Admission Prerequisites
+Computer Science I --------------------------------------- CS 5303 
+Computer Science II -------------------------------------- CS 5330
+Discrete Structures -------------------------------------- CS 5333 
+Algorithm Analysis & Data Structures --------------------- CS 5343
+Operating System Concepts -------------------------------- CS 5348 
+Computer Networks ---------------------------------------- CS 5390
+__________________________________________________________________
+
+Track: Data Science 
+
+Core Courses 
+Statistical Methods for Data Sciences -------------------- CS 6313
+Big Data Management and Analytics ------------------------ CS 6350
+Design and Analysis and Computer Algorithms -------------- CS 6363
+Machine Learning ----------------------------------------- CS 6375
+
+X of the Following Courses 
+Social Network Analytics --------------------------------- CS 6301
+Natural Language Processing ------------------------------ CS 6320
+Video Analytics ------------------------------------------ CS 6327 
+Statistics for Machin Learning --------------------------- CS 6347
+Database Design ------------------------------------------ CS 6360
+
+Admission Prerequisites
+Computer Science I --------------------------------------- CS 5303 
+Computer Science II -------------------------------------- CS 5330
+Discrete Structures -------------------------------------- CS 5333 
+Algorithm Analysis & Data Structures --------------------- CS 5343
+Operating System Concepts -------------------------------- CS 5348 
+Probability & Statistics in CS --------------------------- CS 3341
+__________________________________________________________________
+
+Track: Intelligent Systems
+
+Core Courses
+Natural Language Processing ------------------------------ CS 6320
+Design and Analysis of Computer Algorithms --------------- CS 6363
+Artificial Intelligence ---------------------------------- CS 6364
+Machine Learning ----------------------------------------- CS 6375
+
+X of the Following Courses 
+Database Design ------------------------------------------ CS 6360
+Advanced Operating Systems ------------------------------- CS 6378
+
+Admission Prerequisites 
+Computer Science I --------------------------------------- CS 5303 
+Computer Science II -------------------------------------- CS 5330
+Discrete Structures -------------------------------------- CS 5333 
+Algorithm Analysis & Data Structures --------------------- CS 5343
+Operating System Concepts -------------------------------- CS 5348 
+__________________________________________________________________
+
+Track: Interactive Computing 
+
+Core Courses
+Human Computer Interaction ------------------------------- CS 6326
+Design and Analysis of Computer Algorithms --------------- CS 6363
+
+X of the Following Courses 
+Computer Animation and Gaming ---------------------------- CS 6323
+Modeling and Simulation ---------------------------------- CS 6328
+Multimedia Systems --------------------------------------- CS 6331
+Virtual Reality ------------------------------------------ CS 6334 
+Computer Graphics ---------------------------------------- CS 6366
+
+Admission Prerequisites 
+Computer Science I --------------------------------------- CS 5303 
+Computer Science II -------------------------------------- CS 5330
+Discrete Structures -------------------------------------- CS 5333 
+Algorithm Analysis & Data Structures --------------------- CS 5343
+Operating System Concepts -------------------------------- CS 5348
+__________________________________________________________________
+
+Track: Networks and Telecommunications 
+
+Core Courses
+Perf. of Computer Systems and Networks ------------------- CS 6352
+Design and Analysis of Computer Algorithms --------------- CS 6363 
+Advanced Operating Systems ------------------------------- CS 6378
+Algorithmic Aspects of Telecomm. Networks ---------------- CS 6385
+Advanced Computer Networks ------------------------------- CS 6390
+
+Admission Prerequisites 
+Computer Science I --------------------------------------- CS 5303 
+Computer Science II -------------------------------------- CS 5330
+Discrete Structures -------------------------------------- CS 5333 
+Algorithm Analysis & Data Structures --------------------- CS 5343
+Operating System Concepts -------------------------------- CS 5348
+Computer Networks ---------------------------------------- CS 5390 
+Probability & Statistics in CS --------------------------- CS 3341
+__________________________________________________________________
+
+Track: Systems 
+
+Core Courses
+Computer Architecture ------------------------------------ CS 6304
+Design and Analysis of Computer Algorithms --------------- CS 6363 
+Advanced Operating Systems ------------------------------- CS 6378
+Real-Time Systems ---------------------------------------- CS 6396
+
+X of the Following Courses
+Network Security ----------------------------------------- CS 6349
+Parallel Processing -------------------------------------- CS 6376
+Distributed Computing ------------------------------------ CS 6380
+Synthesis and Opt. of High-Perf. Systems ----------------- CS 6397
+Parallel Architectures and Systems ----------------------- CS 6399
+
+Admission Prerequisites
+Computer Science I --------------------------------------- CS 5303 
+Computer Science II -------------------------------------- CS 5330
+Discrete Structures -------------------------------------- CS 5333 
+Algorithm Analysis & Data Structures --------------------- CS 5343
+Operating System Concepts -------------------------------- CS 5348
+Computer Networks** -------------------------------------- CS 5390
+__________________________________________________________________
+
+Track: Traditional Computer Science 
+
+Core Courses
+Design and Analysis of Computer Algorithms --------------- CS 6363
+Advanced Operating Systems ------------------------------- CS 6378
+Advanced Computer Networks ------------------------------- CS 6390 
+
+X of the Following Courses 
+Compiler Construction ------------------------------------ CS 6353
+Database Design ------------------------------------------ CS 6360
+Advanced Programming Languages --------------------------- CS 6371
+
+Admission Prerequisites 
+Computer Science I --------------------------------------- CS 5303 
+Computer Science II -------------------------------------- CS 5330
+Discrete Structures -------------------------------------- CS 5333 
+Algorithm Analysis & Data Structures --------------------- CS 5343
+Operating System Concepts -------------------------------- CS 5348
+Automata Theory ------------------------------------------ CS 5349
+Computer Networks ---------------------------------------- CS 5390
+__________________________________________________________________
+
+			*******************************
+			* Software Engineering Tracks *
+			*******************************
+
+Track: Software Engineering 
+
+Core Courses
+Object Oriented Software Engineering --------------------- SE 6329
+Advanced Requirements Enginrg ---------------------------- SE 6361
+Adv. Softwr Archtctr & Design ---------------------------- SE 6362
+Software Testing, Validation, Verification --------------- SE 6367
+Advanced Software Engineering Project -------------------- SE 6387
+
+Admission Prerequisites 
+Computer Science I --------------------------------------- CS 5303 
+Computer Science II -------------------------------------- CS 5330
+Discrete Structures -------------------------------------- CS 5333 
+Algorithm Analysis & Data Structures --------------------- CS 5343
+Operating System Concepts -------------------------------- CS 5348
+Software Engineering ------------------------------------- CS 5354
+__________________________________________________________________
