@@ -17,8 +17,7 @@ public class Course{
     private String repeatCourse = ""; // This variable contains the String "Repeat Excluded" if a course has been taken once before. Default is empty String
      
     /**
-     * Constructor.
-     * Only parameter not being assigned using this constructor is 'repeatCourse' of type String. 
+     * Constructor. 
      * 
      * @param department
      * @param courseNumber
@@ -43,6 +42,67 @@ public class Course{
     this.transferType = transferType; 
     }
     
+    /**
+     * Constructor. 
+     * 
+     * @param department
+     * @param courseNumber
+     * @param className
+     * @param letterGrade
+     * @param semester
+     * @param transferType
+     * @param degreePlanSection 
+     */
+    public Course(String department, String courseNumber, String className, String letterGrade, String semester, String transferType, String degreePlanSection){
+        this.department = department;
+        this.courseNumber = courseNumber;
+        this.className = className;
+        this.letterGrade = letterGrade; 
+        this.semester = semester; 
+        this.transferType = transferType; 
+        this.degreePlanSection = degreePlanSection;
+    }
+    
+    /**
+     * Constructor.
+     * 
+     * @param department
+     * @param courseNumber
+     * @param className
+     */
+    public Course(String department, String courseNumber, String className){
+        this.department = department;
+        this.courseNumber = courseNumber;
+        this.className = className;
+    }
+    
+    /**
+     * Constructor. 
+     * 
+     * @param className
+     * @param department
+     * @param courseNumber
+     * @param semester
+     * @param transferType
+     * @param letterGrade 
+     */
+    public Course(String className, String department, String courseNumber, String semester, String transferType, String letterGrade){
+        this.className = className;
+        this.department = department;
+        this.courseNumber = courseNumber;
+        this.semester = semester; 
+        this.transferType = transferType; 
+        this.letterGrade = letterGrade; 
+    }
+    
+    /**
+     * Constructor.
+     * 
+     * @param department
+     * @param courseNumber
+     * @param className
+     * @param degreePlanSection 
+     */
     public Course(String department, String courseNumber, String className, String degreePlanSection){
         this.department = department;
         this.courseNumber = courseNumber;

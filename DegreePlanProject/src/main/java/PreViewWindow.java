@@ -15,7 +15,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -23,10 +26,12 @@ import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 /**
  * This class is primarily used to display the pre-view of the selected Degree Plan using a JFrame, 
@@ -54,10 +59,12 @@ public class PreViewWindow{
     private ArrayList<String> defaultCSTracks = new ArrayList<>(); // ArrayList will store the CS tracks available 
     private ArrayList<String> defaultSETracks = new ArrayList<>(); // ArrayList will store the SE tracks available 
     private ArrayList<String> defaultLeveling = new ArrayList<>(); // ArrayList will store the leveling/pre-requisite courses that are possible 
-    private ArrayList<String> chosenLeveling_Prereq = new ArrayList<>(); // ArrayList will store the leveling/pre-requisite courses chosen by the user 
-    private ArrayList<Course> coursesList; // ArrayList contains all the courses read-in from the transcript after some filtering
+    private ArrayList<String> chosenLeveling_Prereq = new ArrayList<>(); // ArrayList will store the leveling/pre-requisite courses chosen by the user
+    private ArrayList<Course> convertedLeveling_Prereq = new ArrayList<>(); //ArrayList will store the leveling/pre-requisite courses chosen using Course objects  
+    private ArrayList<Course> coursesArray; // coursesArray contains all the courses read-in from the transcript after some filtering
     private HashMap<String, ArrayList<Course>> defaultCoursesMap; // Hashmap stores the default courses found in the Default.txt file
                                                                   // with the key being the type of track the courses fall under 
+    private ArrayList<ArrayList<ArrayList<String>>> finalDataList; // ArrayList stores data found in each row of each table of the pre-view degree plan 
     
     /**
      * Constructor.
@@ -71,7 +78,7 @@ public class PreViewWindow{
     public PreViewWindow(ArrayList<Course> courses, ArrayList<String> defaultCSTracks, ArrayList<String> defaultSETracks, ArrayList<String> defaultLeveling, 
             HashMap<String, ArrayList<Course>> hashMap){
         setLatch(new CountDownLatch(1));
-        this.coursesList = new ArrayList<>(courses); 
+        this.coursesArray = new ArrayList<>(courses); 
         this.defaultCSTracks = new ArrayList<String>(defaultCSTracks);
         this.defaultSETracks = new ArrayList<String>(defaultSETracks);
         this.defaultLeveling = new ArrayList<String>(defaultLeveling);    
@@ -94,6 +101,7 @@ public class PreViewWindow{
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
+                handleChosenLeveling_Prereq();
                 //SwingUtilities.invokeLater(PreViewWindow.this::createFrameAndTables);
                 SwingUtilities.invokeLater(() -> {
                     createFrameAndTables();
@@ -134,44 +142,55 @@ public class PreViewWindow{
         if (choice == JOptionPane.CLOSED_OPTION) 
         {
             System.exit(0);
-        }
-        
+        } 
         return choice + 1; 
     }
     
     /**
-     * Method is used to create radio buttons that will store the users choice of either Fast Track or Thesis.
+     * Method is used to create check boxes that will store the users choice of either Fast Track or Thesis.
      * 
-     * @return the radio button panel  
+     * @return the check box panel  
      */
     public JPanel fastTrackORThesis(){
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Create new JPanel, will house the radio buttons 
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Create new JPanel, will house the check boxes 
         
-        // Create radio buttons 
-        JRadioButton radioButton1 = new JRadioButton("Fast Track");
-        JRadioButton radioButton2 = new JRadioButton("Thesis");
+        // Create check boxes 
+        JCheckBox checkBox1 = new JCheckBox("Fast Track");
+        JCheckBox checkBox2 = new JCheckBox("Thesis");
 
-        radioButton1.addActionListener(new ActionListener(){
+
+        checkBox1.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                setFastTrackORThesis(radioButton1.getText());
+                if (checkBox1.isSelected()) 
+                {
+                    setFastTrackORThesis(checkBox1.getText());
+                    checkBox2.setSelected(false);
+                }
+                else 
+                {
+                    setFastTrackORThesis(null);
+                }
             }
         });
 
-        radioButton2.addActionListener(new ActionListener(){
+        checkBox2.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                setFastTrackORThesis(radioButton2.getText());
+                if (checkBox2.isSelected())
+                {
+                    setFastTrackORThesis(checkBox2.getText());
+                    checkBox1.setSelected(false);
+                } 
+                else
+                {
+                    setFastTrackORThesis(null);
+                }
             }
         });
-        
-        // Add the radio buttons to a ButtonGroup so only one radio button can be selected
-        ButtonGroup buttonGroup = new ButtonGroup();
-        buttonGroup.add(radioButton1);
-        buttonGroup.add(radioButton2);
 
-        panel.add(radioButton1);
-        panel.add(radioButton2);
+        panel.add(checkBox1);
+        panel.add(checkBox2);
         
         return panel; 
     }
@@ -186,8 +205,8 @@ public class PreViewWindow{
     public JPanel specificTrack(int trackCategory){
         JPanel panel = new JPanel(); // Create new JPanel
         
-        DefaultListModel<String> listModel = new DefaultListModel<String>();  // Create a new DefaultListModel to store the items in the JList
-        JList<String> trackList = new JList<String>(listModel); // Create a new JList and initialize it with the DefaultListModel
+        DefaultListModel<String> listModel = new DefaultListModel<>();  // Create a new DefaultListModel to store the items in the JList
+        JList<String> trackList = new JList<>(listModel); // Create a new JList and initialize it with the DefaultListModel
         trackList.setPreferredSize(new Dimension(300, 200)); // Set the size of the JList to 300 x 200 pixels
         
         JTextField newTrackField = new JTextField(30); // Create a new JTextField for entering new tracks to be added to the list.
@@ -201,14 +220,14 @@ public class PreViewWindow{
         // List of possible tracks to display and manipulate depends on the trackCategory value
         if (trackCategory == 1)
         {
-            for (String course : defaultCSTracks) // Add the CS tracks to the list model
+            for (String course : getDefaultCSTracks()) // Add the CS tracks to the list model
             {
                 listModel.addElement(course);
             }
         }
         else
         {
-            for (String course : defaultSETracks) // Add the SE tracks to the list model
+            for (String course : getDefaultSETracks()) // Add the SE tracks to the list model
             {
                 listModel.addElement(course);
             }
@@ -218,6 +237,7 @@ public class PreViewWindow{
 
         // Selection listener for trackList
         trackList.addListSelectionListener(new ListSelectionListener(){
+            @Override
             public void valueChanged(ListSelectionEvent e){
                 selectButton.setEnabled(true);
                 deleteButton.setEnabled(true);
@@ -228,10 +248,11 @@ public class PreViewWindow{
 
         // Action listener to the selectButton
         selectButton.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e){
                 if (getSelectedTrack() != null) 
                 {
-                    setTypeOfDegreePlan(getSelectedTrack());
+                    setTypeOfDegreePlan(getSelectedTrack().trim());
                     selectedLabel.setText("Selected track: " + getSelectedTrack());
                 }
             }
@@ -239,36 +260,38 @@ public class PreViewWindow{
 
         // Action listener to the deleteButton
         deleteButton.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e){
                 String selectedTrack = trackList.getSelectedValue();
                 listModel.removeElement(selectedTrack);
                 
                 if (trackCategory == 1)
                 {
-                    defaultCSTracks.remove(selectedTrack);
+                    getDefaultCSTracks().remove(selectedTrack);
                 }
                 else 
                 {
-                    defaultSETracks.remove(selectedTrack);
+                    getDefaultSETracks().remove(selectedTrack);
                 }
             }
         });
 
         // Action listener to the addButton
         addButton.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e){
-                String newCourse = newTrackField.getText();
-                if (!newCourse.isEmpty()) 
+                String newCourse = newTrackField.getText().trim();
+                if (!newCourse.isEmpty() && !(defaultCSTracks.contains(newCourse)) && !(defaultSETracks.contains(newCourse))) 
                 {
                     listModel.addElement(newCourse);
                     
                     if (trackCategory == 1) 
                     {
-                        defaultCSTracks.add(newCourse);
+                        getDefaultCSTracks().add(newCourse);
                     } 
                     else 
                     {
-                        defaultSETracks.add(newCourse);
+                        getDefaultSETracks().add(newCourse);
                     }
                     
                     newTrackField.setText("");
@@ -299,6 +322,7 @@ public class PreViewWindow{
    
         return panel; 
     }
+    
     /**
      * Method creates a GUI panel for displaying and manipulating a list of leveling/pre-requisite courses
      * 
@@ -323,13 +347,14 @@ public class PreViewWindow{
         JButton deleteButton = new JButton("Delete");
         JButton addButton = new JButton("Add");
 
-        for (String course : defaultLeveling) // Add the leveling/pre-requisites to the list model
+        for (String course : getDefaultLeveling()) // Add the leveling/pre-requisites to the list model
         {
             listModel.addElement(course);
         }
         
         // Selection listener for myList
         myList.addListSelectionListener(new ListSelectionListener(){
+            @Override
             public void valueChanged(ListSelectionEvent e){
                 selectButton.setEnabled(true);
                 deleteButton.setEnabled(true);
@@ -339,13 +364,14 @@ public class PreViewWindow{
 
         // Action listener to the selectButton
         selectButton.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e){
-                if (selectedLeveling_Prereq != null)
+                if (getSelectedLeveling_Prereq() != null)
                 {
                     if (!(chosenLeveling_Prereq.contains(selectedLeveling_Prereq))) 
                     {
-                        chosenLeveling_Prereq.add(selectedLeveling_Prereq);
-                        defaultListModel.addElement(selectedLeveling_Prereq);
+                        getChosenLeveling_Prereq().add(getSelectedLeveling_Prereq().trim());
+                        defaultListModel.addElement(getSelectedLeveling_Prereq().trim());
                     }
                 }
             }
@@ -353,21 +379,23 @@ public class PreViewWindow{
         
         // Action listener to the deleteButton
         deleteButton.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e){
                 String selectedCourse = myList.getSelectedValue();
                 listModel.removeElement(selectedCourse);
-                defaultLeveling.remove(selectedCourse);
+                getDefaultLeveling().remove(selectedCourse);
             }
         });
 
         // Action listener to the addButton
         addButton.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e){
-                String newCourse = newCourseField.getText();
-                if (!newCourse.isEmpty()) 
+                String newCourse = newCourseField.getText().trim();
+                if (!newCourse.isEmpty() && !(getDefaultLeveling().contains(newCourse))) 
                 {
                     listModel.addElement(newCourse);
-                    defaultLeveling.add(newCourse);
+                    getDefaultLeveling().add(newCourse);
                     newCourseField.setText("");
                 }
             }
@@ -403,7 +431,7 @@ public class PreViewWindow{
      * Method creates one frame and within that frame it creates multiple tables. 
      * 
      */
-    public void createFrameAndTables(){
+    public void createFrameAndTables(){ 
         JFrame frame = new JFrame("Pre-view of Degree Plan"); // Creates a new JFrame. This will act as the sole frame to display the 
                                                               // pre-view of the needed Degree Plan  
         int intFlag; // Variable is a integer flag used to distinguish between groups of degree plan types  
@@ -511,9 +539,11 @@ public class PreViewWindow{
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
-                latch.countDown(); // Remove latch
+                getLatch().countDown(); // Remove latch
             }
         });
+        
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         // Create a new JScrollPane and add the mainPanel (which contains the tableContainer) to it
         JScrollPane scrollPane = new JScrollPane(mainPanel); // The new JScrollPane object is used to make the frame scrollable using scroll bar 
@@ -541,7 +571,18 @@ public class PreViewWindow{
         labelsForTables(intFlag, degreePlanSection, labelPanel); // Method call 
 
         // Create instance of TableModel. TableModel is used to define the structure and data of a table
-        TableModel model = new TableModel(numOfTables, tableFlag, typeOfDegreePlan, defaultCoursesMap, coursesList); 
+        TableModel model = new TableModel(numOfTables, tableFlag, getTypeOfDegreePlan(), getDefaultCoursesMap(), getCoursesArray(), getConvertedLeveling_Prereq()); 
+        this.finalDataList = new ArrayList<ArrayList<ArrayList<String>>> (model.dataList);
+
+        model.addTableModelListener(new TableModelListener(){
+            @Override
+            public void tableChanged(TableModelEvent e){
+                System.out.println("Change in " + tableFlag);
+                model.updateNewRow(tableFlag);
+                model.dataList = new ArrayList<ArrayList<ArrayList<String>>> (getFinalDataList());
+                finalDataList = new ArrayList<ArrayList<ArrayList<String>>> (model.dataList);
+            }
+        });
 
         JTable table = new JTable(model); // Create new JTable and pass instance of TableModel. JTable sets up the table to display the data in the desired format 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -561,6 +602,7 @@ public class PreViewWindow{
         
         JButton addButton = new JButton("Add Row");
         addButton.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e){
                 model.addRow();
                 model.fireTableDataChanged(); // This method comes from AbstractTableModel Class and will trigger the TableModelListener's tableChanged() method, 
@@ -570,6 +612,7 @@ public class PreViewWindow{
         
         JButton deleteButton = new JButton("Delete Row");
         deleteButton.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e){
                 int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) 
@@ -773,7 +816,63 @@ public class PreViewWindow{
             } 
         }
     }
+    
+    /**
+     * Method parses a list of chosen leveling/pre-requisite courses, matches each course against a regular expression pattern, and updates the
+     * corresponding courses in the coursesArray with a ">->" in the name to that indicates they are leveling/pre-requisite courses.
+     */
+    public void handleChosenLeveling_Prereq(){
+        // Regular expressions to match patterns in chosenLeveling_Prereq 
+        Pattern coursePattern = Pattern.compile("([A-Za-z]+)\\s+(\\d{4})\\s+(.+)");
+            
+        for (int ix = 0; ix < getChosenLeveling_Prereq().size(); ix++)
+        {
+            String line = getChosenLeveling_Prereq().get(ix).trim(); // Get the current course as a string and trim whitespace at the ends
 
+            // Regular expression matchers to extract relevant information from chosenLeveling_Prereq
+            Matcher coursePatternMatcher = coursePattern.matcher(line);
+
+            // If the pattern matches the course string, extract the department, course number, and class name
+            if (coursePatternMatcher.matches())
+            {
+                String department = coursePatternMatcher.group(1);
+                String courseNumber = coursePatternMatcher.group(2);
+                String className = ">->" + coursePatternMatcher.group(3);
+
+                Course course = new Course(department, courseNumber, className, "", "", "", "Admission Prerequisites");
+                getConvertedLeveling_Prereq().add(course);
+            }
+        }
+
+        // Hashmap keeps track of courses by their Course key which is a concatenated String of department + course number
+        HashMap<String, Course> coursesArrayMap = new HashMap<>();  // Key: Course key, Value: Course 
+
+        // Populate the HashMap with the courses from coursesArray
+        for (Course course : getCoursesArray())
+        {
+            String key = course.getDepartment() + course.getCourseNumber();
+            coursesArrayMap.put(key, course);
+        }
+
+        // Use an iterator to iterate over the convertedLeveling_Prereq list and modify the corresponding courses in coursesArrayMap
+        Iterator<Course> iterator = getConvertedLeveling_Prereq().iterator();
+        while (iterator.hasNext()) 
+        {
+            Course leveling_PrereqCourse = iterator.next();
+            String key = leveling_PrereqCourse.getDepartment() + leveling_PrereqCourse.getCourseNumber();
+            Course courseFromList = coursesArrayMap.get(key);
+
+            if (courseFromList != null)
+            {
+                courseFromList.setClassName(">->" + courseFromList.getClassName());
+                coursesArrayMap.put(key, courseFromList);
+                iterator.remove();
+            }
+        }
+        
+        coursesArray = new ArrayList<>(coursesArrayMap.values()); // Update the coursesArray with the modified courses from coursesArrayMap    
+    }
+    
     /**
      * @return the typeOfDegreePlan
      */
@@ -828,5 +927,108 @@ public class PreViewWindow{
      */
     public void setLatch(CountDownLatch latch){
         this.latch = latch;
+    }
+
+    /**
+     * @return the selectedLeveling_Prereq
+     */
+    public String getSelectedLeveling_Prereq(){
+        return selectedLeveling_Prereq;
+    }
+
+    /**
+     * @param selectedLeveling_Prereq the selectedLeveling_Prereq to set
+     */
+    public void setSelectedLeveling_Prereq(String selectedLeveling_Prereq){
+            this.selectedLeveling_Prereq = selectedLeveling_Prereq.trim();
+    }
+
+    /**
+     * @return the defaultCSTracks
+     */
+    public ArrayList<String> getDefaultCSTracks(){
+        return defaultCSTracks;
+    }
+
+    /**
+     * @return the defaultSETracks
+     */
+    public ArrayList<String> getDefaultSETracks(){
+        return defaultSETracks;
+    }
+
+    /**
+     * @return the defaultLeveling
+     */
+    public ArrayList<String> getDefaultLeveling(){
+        return defaultLeveling;
+    }
+
+    /**
+     * @return the chosenLeveling_Prereq
+     */
+    public ArrayList<String> getChosenLeveling_Prereq(){
+        return chosenLeveling_Prereq;
+    }
+
+    /**
+     * @return the convertedLeveling_Prereq
+     */
+    public ArrayList<Course> getConvertedLeveling_Prereq(){
+        return convertedLeveling_Prereq;
+    }
+
+    /**
+     * @return the coursesArray
+     */
+    public ArrayList<Course> getCoursesArray(){
+        return coursesArray;
+    }
+
+    /**
+     * @return the defaultCoursesMap
+     */
+    public HashMap<String, ArrayList<Course>> getDefaultCoursesMap(){
+        return defaultCoursesMap;
+    }
+    
+    public void print(){
+        System.out.println("Courses:");
+        System.out.println();
+        
+        for (Course course : getCoursesArray()) 
+        {
+            System.out.println(course.getDepartment() + " " + course.getCourseNumber() + ": " + course.getClassName());
+            System.out.println("Attempted Points: " + course.getAttemptedCredits());
+            System.out.println("Earned Points: " + course.getEarnedCredits());
+            System.out.println("Letter Grade: " + course.getLetterGrade());
+            System.out.println("Class Points: " + course.getPoints());
+            System.out.println("Semester: " + course.getSemester());
+            System.out.println("Transfer Type: " + course.getTransferType());
+            System.out.println(course.getRepeatCourse());
+            System.out.println();
+        }
+        
+        System.out.println("convertedLeveling_Prereq:");
+        System.out.println();
+        for (Course course : getConvertedLeveling_Prereq()) 
+        {
+            System.out.println(course.getDepartment() + " " + course.getCourseNumber() + ": " + course.getClassName());
+            System.out.println("Attempted Points: " + course.getAttemptedCredits());
+            System.out.println("Earned Points: " + course.getEarnedCredits());
+            System.out.println("Letter Grade: " + course.getLetterGrade());
+            System.out.println("Class Points: " + course.getPoints());
+            System.out.println("Semester: " + course.getSemester());
+            System.out.println("Transfer Type: " + course.getTransferType());
+            System.out.println(course.getRepeatCourse());
+            System.out.println();
+        }
+    }
+
+    /**
+     * @return the finalDataList
+     */
+    public ArrayList<ArrayList<ArrayList<String>>> getFinalDataList(){
+        return finalDataList;
     }
 }

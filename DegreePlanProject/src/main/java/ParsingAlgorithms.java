@@ -20,8 +20,15 @@ public class ParsingAlgorithms{
     private ArrayList<String> defaultLeveling = new ArrayList<>(); // ArrayList will store the leveling courses/pre-requisites that are possible 
     private ArrayList<Course> coursesArray = new ArrayList<>(); // ArrayList of Courses, valid courses read-in from transcriptData are stored here
     private HashMap<String, ArrayList<Course>> defaultCoursesMap = new HashMap<>(); // Hashmap stores the default courses found in the Default.txt file
-                                                                                    // with the key being the type of track the courses fall under 
-
+                                                                                    // with the key being the type of track the courses fall under  
+    private ArrayList<Course> coreCourses = new ArrayList<>(); // ArrayList will store the core courses being used in the degree plan 
+    private ArrayList<Course> XFollowingCourses = new ArrayList<>(); // ArrayList will store the "X000 following courses" being used in the degree plan
+    private ArrayList<Course> electives = new ArrayList<>(); // ArrayList will store the elective courses being used in the degree plan
+    private ArrayList<Course> additionalElectives = new ArrayList<>(); // ArrayList will store the additional elective courses being used in the degree plan
+    private ArrayList<Course> otherRequirements = new ArrayList<>(); // ArrayList will store the other requirement courses being used in the degree plan
+    private ArrayList<Course> admissionPrerequisites = new ArrayList<>(); // ArrayList will store the admission prerequisite courses being used in the degree plan 
+    private ArrayList<ArrayList<ArrayList<String>>> finalDataList; // ArrayList stores data found in each row of each table of the pre-view degree plan
+    
     /**
      * Method is used to parse through the transcript data and extract relevant information. 
      * 
@@ -364,6 +371,69 @@ public class ParsingAlgorithms{
         
         coursesArray = new ArrayList<>(courseMap.values());  // courseArray will no longer contain courses with duplicates caused by Transfer credits or Fast Track credits
 }
+    /**
+     * This method is populating several ArrayLists (coreCourses, XFollowingCourses, electives, additionalElectives, otherRequirements, and admissionPrerequisites) 
+     * with Course objects. 
+     * The Course objects are created by extracting relevant information from a nested ArrayList of data called finalDataList.
+     * 
+     */
+    public void populateDegreePlanArrayLists(){
+        String department = "";
+        String courseNumber = "";
+        
+        for (int i = 0; i < getFinalDataList().size(); i++) // if-statement loops through the outer list of finalDataList 
+        {
+            for (int j = 0; j < getFinalDataList().get(i).size(); j++) // if-statement loops through the inner lists of finalDataList
+            {   
+                String courseDepAndNumber = getFinalDataList().get(i).get(j).get(1).trim();
+               
+                if (!(courseDepAndNumber.equals(""))) 
+                {
+                    String[] parts = courseDepAndNumber.split(" "); // split the string on a space
+                    department = parts[0];
+                    courseNumber = parts[1];
+                }
+                
+                // Based on the index i of the outer loop, create Course objects and add them to corresponding ArrayLists
+                if (i == 0 && !(getFinalDataList().get(i).get(j).get(0).trim().equals(""))) 
+                {
+                    course = new Course(getFinalDataList().get(i).get(j).get(0).trim(), department, courseNumber, getFinalDataList().get(i).get(j).get(2).trim(),
+                            getFinalDataList().get(i).get(j).get(3).trim(), getFinalDataList().get(i).get(j).get(4).trim());
+                    coreCourses.add(course);
+                } 
+                else if (i == 1 && !(getFinalDataList().get(i).get(j).get(0).trim().equals(""))) 
+                {
+                    course = new Course(getFinalDataList().get(i).get(j).get(0).trim(), department, courseNumber, getFinalDataList().get(i).get(j).get(2).trim(),
+                            getFinalDataList().get(i).get(j).get(3).trim(), getFinalDataList().get(i).get(j).get(4).trim());
+                    XFollowingCourses.add(course);
+                } 
+                else if (i == 2 && !(getFinalDataList().get(i).get(j).get(0).trim().equals("")))
+                {
+                    course = new Course(getFinalDataList().get(i).get(j).get(0).trim(), department, courseNumber, getFinalDataList().get(i).get(j).get(2).trim(),
+                            getFinalDataList().get(i).get(j).get(3).trim(), getFinalDataList().get(i).get(j).get(4).trim());
+                    electives.add(course);
+                } 
+                else if (i == 3 && !(getFinalDataList().get(i).get(j).get(0).trim().equals("")))
+                {
+                    course = new Course(getFinalDataList().get(i).get(j).get(0).trim(), department, courseNumber, getFinalDataList().get(i).get(j).get(2).trim(),
+                            getFinalDataList().get(i).get(j).get(3).trim(), getFinalDataList().get(i).get(j).get(4).trim());
+                    additionalElectives.add(course);
+                } 
+                else if (i == 4 && !(getFinalDataList().get(i).get(j).get(0).trim().equals(""))) 
+                {
+                    course = new Course(getFinalDataList().get(i).get(j).get(0).trim(), department, courseNumber, getFinalDataList().get(i).get(j).get(2).trim(),
+                            getFinalDataList().get(i).get(j).get(3).trim(), getFinalDataList().get(i).get(j).get(4).trim());
+                    otherRequirements.add(course);
+                }
+                else if (i == 5 && !(getFinalDataList().get(i).get(j).get(0).trim().equals("")))
+                {
+                    course = new Course(getFinalDataList().get(i).get(j).get(0).trim(), department, courseNumber, getFinalDataList().get(i).get(j).get(2).trim(),
+                            getFinalDataList().get(i).get(j).get(3).trim(), getFinalDataList().get(i).get(j).get(4).trim());
+                    admissionPrerequisites.add(course);
+                }
+            }
+        }
+    }
     
     public void printCourses(){
         System.out.println("Name: " + getName());
@@ -539,4 +609,19 @@ public class ParsingAlgorithms{
     public void setDefaultLeveling(ArrayList<String> defaultLeveling){
         this.defaultLeveling = defaultLeveling;
     }
+
+    /**
+     * @return the finalDataList
+     */
+    public ArrayList<ArrayList<ArrayList<String>>> getFinalDataList(){
+        return finalDataList;
+    }
+
+    /**
+     * @param finalDataList the finalDataList to set
+     */
+    public void setFinalDataList(ArrayList<ArrayList<ArrayList<String>>> finalDataList){
+        this.finalDataList = finalDataList;
+    }
+    
 }

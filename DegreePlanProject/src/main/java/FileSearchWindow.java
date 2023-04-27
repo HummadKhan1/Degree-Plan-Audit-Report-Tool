@@ -3,10 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.event.ActionEvent;
-//import java.io.IOException;
+
 import java.util.concurrent.CountDownLatch;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
+
 
 /**
  * This class is used to launch the GUI that allows the user to search and select a desired file. 
