@@ -1,10 +1,9 @@
 # Computer-Science-Project 
 
-****************************************************************************
-* Important Information:                                                   *
+* Important Information:                                                   
 *  - It is imperative that the user's computer be using Java 17 or newer.  
 *  - Project uses Maven.
-****************************************************************************
+
 
 The folder titled "Degree Plan & Audit Report Tool" contains the DegreePlan_AuditReport_Tool.jar file and Default.txt file needed to run the program like an application (keep them in the same directory always). The instructions on how to run and use the application can be found in the Final_Report.pdf file in the section titled "Code Documentation."
 
