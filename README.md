@@ -1,25 +1,6 @@
 # Computer-Science-Project 
 
-Project Objectives:
+Folder Named "Degree Plan & Audit Report Tool" contains the DegreePlan_AuditReport_Tool.jar file and Default.txt file needed to run the program like an application (keep them in the same directory always). The instructions on how to run and use the application can be found in the Final_Report.pdf file in the section titled "Code Documentation."
 
-Create a tool to assist DPEs (Degree Plan Evaluators) to quickly and accurately
-generate and print Degree Plans
+The folder named "DegreePlan_AuditReport_Project" contains all the source code that was developed for the application. The directory DegreePlan_AuditReport_Project\src\main\java is where the source code for the application can be found. Know that the directory Desktop\DegreePlan_AuditReport_Project\src\main\assembly contains a xml file that is used to create a JAR assembly that includes the compiled classes of the project and its runtime dependencies, without the base directory. The MainDriver class contains the main() method that drives the entire program. Lastly, please always have the Default.txt file in the same folder as the source code. 
 
-Improve an existing tool that does necessary calculations for degree audits (GPA
-calculations, required GPA calculations)
-
-Generate an audit report for upcoming graduates
-
-This system must be expandable (be able to easily expand course lists and degree
-plans)
-
-Generate PDF degree plan for printing with minimal data entry required by
-advisors and staff
-
-Document the environment required for the application and the installation
-process
-
-Document how future developers go about adding/changing course numbers,
-course names, degree plans
-
-Provide a document describing the basic usage of the system in Wiki form
