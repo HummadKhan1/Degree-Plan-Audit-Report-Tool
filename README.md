@@ -5,7 +5,7 @@
 *  - Project uses Maven.
 
 
-The folder titled "Degree Plan & Audit Report Tool" contains the DegreePlan_AuditReport_Tool.jar file and Default.txt file needed to run the program like an application (keep them in the same directory always). The instructions on how to run and use the application can be found in the Final_Report.pdf file in the section titled "Code Documentation."
+The folder titled "Degree Plan & Audit Report Tool" contains the DegreePlan_AuditReport_Tool.jar file and Default.txt file needed to run the program like an application (keep them in the same directory always). The instructions on how to run and use the application can be found in the Final_Report.pdf file in the section titled "Code Documentation." If, for some reason, the method of running the DegreePlan_AuditReport_Tool.jar file described in the Final_Report.pdf does not work, you can navigate to the folder using the terminal and execute the following command: java -jar DegreePlan_AuditReport_Tool.jar. The program should run after this.
 
 The folder titled "DegreePlan_AuditReport_Project" contains all the source code that was developed for the application. 
 The directory DegreePlan_AuditReport_Project\src\main\java is where the source code for the application can be found. 
