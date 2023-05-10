@@ -49,7 +49,9 @@ public class MakeTXTFile{
 
         File originalFile = new File(filePath);
         String originalFileDirectory = originalFile.getParent();
-
+        
+        //System.out.println("parent: " + originalFileDirectory);
+        
         try {
             copyAndModifyFile(sourceFileName, destinationFileName, originalFileDirectory);
         }catch (IOException e){

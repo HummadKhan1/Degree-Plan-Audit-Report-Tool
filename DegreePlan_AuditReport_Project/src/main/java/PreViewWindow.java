@@ -33,7 +33,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 /**
- * This class is primarily used to display the pre-view of the selected Degree Plan using a JFrame, 
+ * This class is primarily used to display the preview of the selected Degree Plan using a JFrame, 
  * but it is also used to get some user input through a separate JFrame. 
  * 
  */

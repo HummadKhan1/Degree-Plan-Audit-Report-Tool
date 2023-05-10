@@ -33,6 +33,9 @@ public class MainDriver{
                 parse.populateDegreePlanArrayLists();
 
                 parse.mergeLists(); 
+                parse.printCourses();
+                //String FToT = preViewWindow.getFastTrackORThesis();
+                output(parse, preViewWindow, fileSearchWindow.getFilePath());
 
                 MakeTXTFile makeTXT = new MakeTXTFile(parse.getName(), parse.getID(), parse.getProgram(), parse.getAppliedIn(), parse.getMajor(), 
                         parse.getDefaultCSTracks(),parse.getDefaultSETracks(), parse.getDefaultLeveling(), parse.getCoursesArray(),
@@ -50,12 +53,15 @@ public class MainDriver{
                 parse.parseDefaultCourses(fileReader.getReadInTxt());
 
                 PreViewWindow preViewWindow = new PreViewWindow(parse.getCoursesArray(), parse.getDefaultCSTracks(), parse.getDefaultSETracks(), parse.getDefaultLeveling(), parse.getDefaultCoursesMap());
+                
                 preViewWindow.getLatch().await(); // Used to make the program wait until latch has been released  
 
                 parse.setFinalDataList(preViewWindow.getFinalDataList());
                 parse.populateDegreePlanArrayLists();
 
                 parse.mergeLists();
+                //String FToT = preViewWindow.getFastTrackORThesis();
+                output(parse, preViewWindow, fileSearchWindow.getFilePath());
                 
                 MakeTXTFile makeTXT = new MakeTXTFile(parse.getName(), parse.getID(), parse.getProgram(), parse.getAppliedIn(), parse.getMajor(),
                         parse.getDefaultCSTracks(), parse.getDefaultSETracks(), parse.getDefaultLeveling(), parse.getCoursesArray(),
@@ -85,5 +91,8 @@ public class MainDriver{
             System.exit(0);
         } 
         return choice + 1; 
+    }
+    public static void output(ParsingAlgorithms parse, PreViewWindow pvw, String filePath){
+        GraduateStudent gStudent = new GraduateStudent(parse, pvw, filePath); 
     }
 }

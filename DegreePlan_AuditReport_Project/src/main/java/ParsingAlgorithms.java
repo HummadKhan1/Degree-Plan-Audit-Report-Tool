@@ -29,7 +29,7 @@ public class ParsingAlgorithms{
     private ArrayList<Course> otherRequirements = new ArrayList<>(); // ArrayList will store the other requirement courses being used in the degree plan
     private ArrayList<Course> admissionPrerequisites = new ArrayList<>(); // ArrayList will store the admission prerequisite courses being used in the degree plan 
     private ArrayList<ArrayList<ArrayList<String>>> finalDataList; // ArrayList stores data found in each row of each table of the pre-view degree plan
-    
+    private ArrayList<Course> allElectives = new ArrayList<>();
     /**
      * Method is used to parse through the transcript data and extract relevant information. 
      * 
@@ -47,7 +47,7 @@ public class ParsingAlgorithms{
             Pattern idPattern = Pattern.compile("Student ID:\\s+(\\w+)");
             Pattern semesterPattern = Pattern.compile("(\\d{4})\\s+(Spring|Summer|Fall)"); 
             Pattern programPattern = Pattern.compile("Program:\\s+(Master)");
-            Pattern majorPattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}:\\s+(Computer Science|Software Engineering) Major");
+            Pattern majorPattern = Pattern.compile("(\\d{4}-\\d{2}-\\d{2}:\\s+(Computer Science|Software Engineering) Major)(?:(?!Major).)*");
             Pattern courseRepeatPattern = Pattern.compile("Repeated:\\s+(\\w+)\\s+(\\w+)");
             Pattern courseDataPattern = Pattern.compile("([A-Z]*)\\s+(\\d{4})\\s+(.*?)\\s+(\\d+\\.?\\d*)\\s+(\\d+\\.?\\d*)\\s*([A-Z]([+-])?)?\\s*(\\d+\\.?\\d*)");
              
@@ -660,7 +660,11 @@ public class ParsingAlgorithms{
      * @param major the major to set
      */
     public void setMajor(String major){
-        this.major = major;
+        String[] arr = major.split(" ",2);
+        
+        major = arr[1];
+         
+        this.major = major.trim();
     }
 
     /**
@@ -745,6 +749,41 @@ public class ParsingAlgorithms{
      */
     public void setFinalDataList(ArrayList<ArrayList<ArrayList<String>>> finalDataList){
         this.finalDataList = finalDataList;
+    }
+    
+    /*
+    private ArrayList<Course> coreCourses = new ArrayList<>(); // ArrayList will store the core courses being used in the degree plan 
+    private ArrayList<Course> XFollowingCourses = new ArrayList<>(); // ArrayList will store the "X000 following courses" being used in the degree plan
+    private ArrayList<Course> electives = new ArrayList<>(); // ArrayList will store the elective courses being used in the degree plan
+    private ArrayList<Course> additionalElectives = new ArrayList<>(); // ArrayList will store the additional elective courses being used in the degree plan
+    private ArrayList<Course> otherRequirements = new ArrayList<>(); // ArrayList will store the other requirement courses being used in the degree plan
+    private ArrayList<Course> admissionPrerequisites = new ArrayList<>(); // ArrayL
+    */
+    
+    public ArrayList<Course> getCoreCourses(){
+       return coreCourses; 
+    }
+    public ArrayList<Course> getXFollowingCourses(){
+       return XFollowingCourses; 
+    }
+    public ArrayList<Course> getElectives(){
+       return electives; 
+    }
+    public ArrayList<Course> getAdditionalElectives(){
+       return additionalElectives; 
+    }
+    public ArrayList<Course> getOtherRequirements(){
+       return otherRequirements; 
+    }
+    public ArrayList<Course> getAdmissionPrerequisites(){
+       return admissionPrerequisites; 
+    }
+    public void setAllElectives(){
+        allElectives.addAll(electives);
+        allElectives.addAll(additionalElectives);
+    }
+    public ArrayList<Course> getAllElectives(){
+        return allElectives;
     }
     
 }
