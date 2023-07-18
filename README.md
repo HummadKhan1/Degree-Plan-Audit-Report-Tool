@@ -1,4 +1,4 @@
-# Computer-Science-Project 
+# Computer-Science-Project (Degree Plan/Audit Tool )
 
 * Important Information:                                                   
 *  - It is imperative that the user's computer be using Java 17 or newer.  
